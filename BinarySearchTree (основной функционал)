@@ -1,0 +1,88 @@
+class BinarySearchTree:
+    def __init__(self):
+        """
+        Инициализация пустого дерева.
+        """
+        self.root = None
+
+    def insert(self, key):
+        """
+        Вставка ключа в дерево.
+        :param key: Ключ для вставки.
+        """
+        def _insert(node, key):
+            if node is None:
+                return Node(key)
+            if key < node.key:
+                node.left = _insert(node.left, key)
+            else:
+                node.right = _insert(node.right, key)
+            return node
+        self.root = _insert(self.root, key)
+
+    def search(self, key):
+        """
+        Поиск ключа в дереве.
+        :param key: Ключ для поиска.
+        :return: True, если ключ найден; иначе False.
+        """
+        def _search(node, key):
+            if node is None:
+                return False
+            if node.key == key:
+                return True
+            if key < node.key:
+                return _search(node.left, key)
+            return _search(node.right, key)
+        return _search(self.root, key)
+
+    def delete(self, key):
+        """
+        Удаление узла из дерева.
+        :param key: Ключ для удаления.
+        """
+        def _delete(node, key):
+            if node is None:
+                return node
+            if key < node.key:
+                node.left = _delete(node.left, key)
+            elif key > node.key:
+                node.right = _delete(node.right, key)
+            else:
+                # Узел с одним или нулем потомков
+                if node.left is None:
+                    return node.right
+                elif node.right is None:
+                    return node.left
+                # Узел с двумя потомками: нахождение минимального в правом поддереве
+                temp = self._min_value_node(node.right)
+                node.key = temp.key
+                node.right = _delete(node.right, temp.key)
+            return node
+
+        self.root = _delete(self.root, key)
+
+    def _min_value_node(self, node):
+        """
+        Нахождение узла с минимальным ключом.
+        :param node: Корень поддерева.
+        :return: Узел с минимальным ключом.
+        """
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def inorder_traversal(self):
+        """
+        Симметричный обход дерева.
+        :return: Список ключей в порядке возрастания.
+        """
+        def _inorder(node, result):
+            if node:
+                _inorder(node.left, result)
+                result.append(node.key)
+                _inorder(node.right, result)
+        result = []
+        _inorder(self.root, result)
+        return result
