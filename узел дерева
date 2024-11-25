@@ -1,0 +1,15 @@
+class Node:
+    def __init__(self, key):
+        """
+        Инициализация узла дерева.
+        :param key: Ключ узла.
+        """
+        self.key = key
+        self.left = None
+        self.right = None
+
+    def __repr__(self):
+        """
+        Представление узла для отладки.
+        """
+        return f"Node({self.key})"
